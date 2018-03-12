@@ -69,9 +69,7 @@ def search(widgets, is_mile=False):
 	else:
 		return rev_path_list[::-1], calc_miles(rev_path_list[::-1]), steps
 
-
-if __name__ == '__main__':
-
+def main():
 	widgets = []
 	for string in str_list:
 		widgets.append(WidgetNode(string))
@@ -85,6 +83,11 @@ if __name__ == '__main__':
 	print 'Question 2'
 	print 'Number of miles is ' + str(m)
 	print 'Path of truck is ' + str(path)
+
+
+if __name__ == '__main__':
+	main()
+	#print calc_miles("ABAEDCADBCDEBB")
 
 
 
