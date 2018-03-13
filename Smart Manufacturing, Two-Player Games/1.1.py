@@ -76,11 +76,13 @@ def main():
 
 	path, l, steps = search(widgets)
 	print 'Question 1'
+	print 'Total number of nodes expanded is ' + str(steps)
 	print 'Number of stop is ' + str(l)
 	print 'Path of truck is ' + path
 	print ''
 	path, m, steps = search(widgets, True)
 	print 'Question 2'
+	print 'Total number of nodes expanded is ' + str(steps)
 	print 'Number of miles is ' + str(m)
 	print 'Path of truck is ' + str(path)
 

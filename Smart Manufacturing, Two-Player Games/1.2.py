@@ -2,7 +2,7 @@ import copy
 from HeapNode import HeapNode
 from widgetNode import WidgetNode
 from component import *
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import sys
 
 str_list = ["AEDCA", "BEACD", "BABCE", "DADBD", "BECBD"]
@@ -88,6 +88,7 @@ def main():
 		layers.append(Layer(new_status))
 
 	print 'minimum ' + str(len(layers) - 1) + ' levels required to found solution'
+	has_reach = False
 
 	while True:
 		print 'At layer ' + str(len(layers) - 1)
@@ -110,13 +111,17 @@ def main():
 		print ''
 		
 		if total <= target_mileage:
-			break;
+			if has_reach:
+				break;
+			has_reach = True
 
 		new_status = layers[-1].get_nxt_layer()
 		layers.append(Layer(new_status))
 
 	print 'search finish'
 	plt.plot(layer_nums, mile_nums)
+	plt.xlabel('Number of level')
+	plt.ylabel('Total mileage')
 	plt.show()
 
 if __name__ == '__main__':
