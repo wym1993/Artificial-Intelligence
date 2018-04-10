@@ -4,6 +4,12 @@ from collections import Counter
 import time
 
 def read_data(filename):
+	"""
+	This function read image data as well as labels from the file
+
+	filename(str): The filename for image and labels
+
+	"""
 	data, label = [], []
 	with open(filename, 'r') as f:
 		while True:
@@ -19,6 +25,14 @@ def read_data(filename):
 	return np.array(data).T, np.array(label)
 
 def label_matrix(label, n = 10):
+	"""
+	This function changes the label array to one-hot format
+
+	label(list): The array of labels
+	n(int): The number of classes with default as 10
+
+	"""
+	
 	m = len(label)
 	matrix = np.zeros((m, n))
 	for i in range(m):
@@ -31,9 +45,35 @@ def label_matrix(label, n = 10):
 	return matrix.T
 
 def manhattan_distance(arr1, arr2):
+	"""
+	This function calculates the manhattan distance between two arrays
+
+	arr1(list): image data
+	arr2(list): image data
+
+	"""
 	return np.sum(np.logical_and(arr1>0, arr2>0))
 
+def square_distance(arr1, arr2):
+	"""
+	This function calculates the mean-square distance between two arrays
+
+	arr1(list): image data
+	arr2(list): image data
+
+	"""
+
+	return np.sqrt(np.sum(np.square(arr1 > 0 - arr2 > 0)))
+
 def find_neighbors(data, test, dis_func):
+	"""
+	This function finds the sorting neighbors for every test examples
+
+	data(list): The training image data
+	test(list): The test image data
+	dis_func(function): The method used to calculate the distance
+
+	"""
 	
 	nei = []
 	ave_time = []
@@ -55,6 +95,15 @@ def find_neighbors(data, test, dis_func):
 	return nei
 
 def get_label(test, label, nei, k):
+	"""
+	This function finds the label for each test example based on the nearest neighbors find from prevous function
+
+	test(list): The test image data
+	label(list): The label for training image data
+	nei(list): The sorted neighbors for each test example
+	k(int): The value of k nearest neighbors
+	
+	"""
 	pred = np.zeros((test.shape[1], 10))
 	for i in range(test.shape[1]):
 		for j in nei[i][:k]:
@@ -96,6 +145,11 @@ def main():
 		s = np.sum(confusion_matrix[row, :])
 		for col in range(10):
 			confusion_matrix[row, col] /= float(s)
+
+	for line in confusion_matrix:
+		for val in line:
+			print "{0:.2f} ".format(val),
+		print ''
 
 	fig = plt.figure()
 	plt.plot(k_range, acc_list, 'r')

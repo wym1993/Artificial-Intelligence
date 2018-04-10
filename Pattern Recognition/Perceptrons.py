@@ -2,6 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def read_data(filename):
+	"""
+	This function read image data as well as labels from the file
+
+	filename(str): The filename for image and labels
+
+	"""
+
 	data, label = [], []
 	with open(filename, 'r') as f:
 		while True:
@@ -17,6 +24,14 @@ def read_data(filename):
 	return np.array(data).T, np.array(label)
 
 def label_matrix(label, n = 10):
+	"""
+	This function changes the label array to one-hot format
+
+	label(list): The array of labels
+	n(int): The number of classes with default as 10
+
+	"""
+
 	m = len(label)
 	matrix = np.zeros((m, n))
 	for i in range(m):
@@ -29,12 +44,35 @@ def label_matrix(label, n = 10):
 	return matrix.T
 
 def log_loss(label, output):
+	"""
+	This function calcualte the log loss of the predictions
+
+	label(list): The label for image data
+	output(list): The prediction for image data
+
+	"""
+
 	loss = 0.0
 	for i in range(output.shape[0]):
 		loss += np.log(np.exp(output[i, label[i]]) / np.sum(np.exp(output[i, :])) + 10 ** -12)
 	return loss / (-output.shape[0])
 
 def train(data, label_train, test_data, label_test, learning_rate=0.001, weight_type='zeros', data_type='fixed', epoch=30, decay=0.0):
+	"""
+	This function is the training phase of the perceptron algorithm
+
+	data(list): The training image data
+	label_train(list): The label for training image data
+	test_data(list): The test image data
+	label_test(list): The label for test image data
+	learning_rate(float): The learning rate with default 0.001
+	weight_type(str): The type of weight matrix initialization
+	data_type(str): The variable indicating whether to shuffle the image dataset
+	epoch(int): Number of epoches to train
+	decay(float): learning rate decay variable
+
+	"""
+
 
 	if weight_type == 'zeros':
 		weight = np.zeros((data.shape[0], 10))
@@ -79,10 +117,15 @@ def train(data, label_train, test_data, label_test, learning_rate=0.001, weight_
 		
 	return weight, result
 
-def get_loss(pred, label):
-	pass
-
 def test(data, label, weight):
+	"""
+	This function tests the image data after the training phase
+
+	data(list): The test image data
+	label(list): The test image data label
+	weight(list): The weight matrix got from the training phase
+	
+	"""
 	output = np.dot(weight.T, data)
 	pred = np.argmax(output, axis=0)
 	
@@ -117,7 +160,7 @@ def main():
 		X_test = np.concatenate((X_test, bias_test), axis=0)
 
 	weight, result = train(X_train, label_train, X_test, label_test, weight_type=weight_type, data_type=data_type, epoch=epoch, decay=decay)
-	'''
+	
 	plt.figure()
 	plt.plot([2,1])
 	plt.subplot(211)
@@ -132,11 +175,11 @@ def main():
 	plt.legend(loc=1)
 	plt.xlabel('Epoch')
 	plt.ylabel('Train/Test Accuracy')
-	'''
+	
 
 	pred, _, acc = test(X_test, label_test, weight)
 	print('The overall accuracy is ' + str(acc))
-	'''
+	
 	confusion_matrix = np.zeros((10, 10))
 	for i in range(len(label_test)):
 		confusion_matrix[label_test[i], np.argmax(pred[:, i])] += 1
@@ -146,13 +189,17 @@ def main():
 		for col in range(10):
 			confusion_matrix[row, col] /= float(s)
 
+	for line in confusion_matrix:
+		for val in line:
+			print "{0:.2f} ".format(val),
+		print ''
+
 	fig = plt.figure()
 	res = plt.imshow(np.array(confusion_matrix), cmap=plt.cm.jet, interpolation='nearest')
 	plt.colorbar(res)
 
 	#plt.legend(loc=1)
 	plt.show()
-	'''
 
 if __name__ == '__main__':
 	main()
